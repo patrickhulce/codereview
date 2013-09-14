@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <link href="css/bootstrap.css" rel="stylesheet">
+    <link rel="stylesheet/less" type="text/css" href="style.less" />
+    <link href="//netdna.bootstrapcdn.com/font-awesome/3.2.1/css/font-awesome.min.css" rel="stylesheet">
+    <link href='http://fonts.googleapis.com/css?family=Droid+Sans+Mono' rel='stylesheet' type='text/css'>
+</head>
+
+<body ng-app='codereview'>
+    <div class='container'>
+        <div class='row'>
+            <div class='col-md-8'>
+                <pre class='prettyprint linenums'>
+                let rec something (int: boo) = 
+    				print_endline "asdfsdf"
+    			</pre>
+            </div>
+            <div class='col-md-4' ng-controller='IssuesCtrl'>
+                <div class='issues'>
+                    <div class='issue' ng-repeat='issue in issues' ng-click='selectIssue($index)'>
+                        {{ issue.name }} ({{issue.severity}}): {{ issue.description}}
+                    </div>
+                </div>
+                <form class='form-horizontal' role='form'>
+                    <input type='hidden' ng-model='issue.index' />
+                    <div class='form-group'>
+                        <label for='issueName' class='control-label col-md-4'>Issue</label>
+                        <div class='col-md-8'>
+                            <input type='text' class='form-control' name='issueName' placeholder='Issue name...' ng-model='issue.name' />
+                        </div>
+                    </div>
+                    <div class='form-group'>
+                        <label for='issueDescription' class='control-label col-md-4'>Description</label>
+                        <div class='col-md-8'>
+                            <textarea rows='3' class='form-control' name='issueDescription' placeholder='Description...' ng-model='issue.description'>
+                            </textarea>
+                        </div>
+                    </div>
+                    <div class='form-group'>
+                        <label for='issueSeverity' class='control-label col-md-4'>Severity</label>
+                        <div class='col-md-8'>
+                            <div class="btn-group">
+                                <button ng-repeat='opt in severityOptions' type="button" class="btn btn-primary" ng-model="issue.severity" btn-radio="opt">{{opt}}</button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class='form-group'>
+                        <div class='col-md-4'></div>
+                        <div class='col-md-8'>
+                            <button class='btn btn-success' ng-click='addIssue()' ng-show='issue.index == -1'>Add</button>
+                            <button class='btn btn-info' ng-click='newIssue()' ng-show='issue.index != -1'>New</button>
+                            <button class='btn btn-danger' ng-click='deleteIssue()' ng-show='issue.index != -1'>Remove</button>
+                        </div>
+                    </div>
+                </form>
+                <pre>{{issue | json}}</pre>
+            </div>
+        </div>
+    </div>
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
+    <script src="//ajax.googleapis.com/ajax/libs/angularjs/1.0.7/angular.min.js"></script>
+    <script src="js/less.js"></script>
+    <script src="js/bootstrap.min.js"></script>
+    <script src="js/ui-utils.min.js"></script>
+    <script src="js/ui-bootstrap.min.js"></script>
+    <script src="js/ui-bootstrap-tpls.min.js"></script>
+    <script src="js/mousetrap.min.js"></script>
+    <script src="https://google-code-prettify.googlecode.com/svn/loader/run_prettify.js"></script>
+
+    <script src='js/app/app.js'></script>
+</body>
+
+</html>
