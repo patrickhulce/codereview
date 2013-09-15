@@ -1,0 +1,70 @@
+<div ng-controller='AssignmentCodeCtrl'>
+
+    <div class='row'>
+        <div class='col-md-8'>
+            <ul class='nav nav-pills'>
+                <li ng-class="{active : selectedPerson.id == person.id}" ng-repeat='person in assignment.people'>
+                    <a ng-click="selectPerson($index)">{{person.name}}</a>
+                </li>
+            </ul>
+        </div>
+        <div class='col-md-4'>
+            <ul class='nav nav-pills'>
+                <li ng-class="{active : selectedFile.name == file.name}" ng-repeat='file in assignment.files'>
+                    <a ng-click="selectFile($index)">{{file.name}}</a>
+                </li>
+            </ul>
+        </div>
+    </div>
+    <div class='row'>
+        <div class='col-md-8'>
+            <pre id='code-view' ng-controller='FileCtrl'>{{fileContents}}
+            </pre>
+        </div>
+        <div class='col-md-4' ng-controller='IssuesCtrl'>
+            <accordion close-others='true'>
+                <accordion-group heading='{{problem.name}}' ng-repeat='problem in selectedFile.problems'>
+            <div class='issues'>
+                <div class='issue' ng-repeat='issue in filteredIssues(problem)' ng-click='selectIssue($index)'>
+                    {{ issue.name }} ({{issue.severity}}): {{ issue.description}}
+                </div>
+            </div>
+            <form class='form-horizontal' role='form'>
+                <input type='hidden' ng-model='issue.index' />
+                <div class='form-group'>
+                    <label for='issueName' class='control-label col-md-4'>Issue</label>
+                    <div class='col-md-8'>
+                        <input type='text' class='form-control' name='issueName' placeholder='Issue name...' ng-model='issue.name' />
+                    </div>
+                </div>
+                <div class='form-group'>
+                    <label for='issueDescription' class='control-label col-md-4'>Description</label>
+                    <div class='col-md-8'>
+                        <textarea rows='3' class='form-control' name='issueDescription' placeholder='Description...' ng-model='issue.description'>
+                        </textarea>
+                    </div>
+                </div>
+                <div class='form-group'>
+                    <label for='issueSeverity' class='control-label col-md-4'>Severity</label>
+                    <div class='col-md-8'>
+                        <div class="btn-group">
+                            <button ng-repeat='opt in severityOptions' type="button" class="btn btn-primary" ng-model="issue.severity" btn-radio="opt">{{opt}}</button>
+                        </div>
+                    </div>
+                </div>
+                <div class='form-group'>
+                    <div class='col-md-4'></div>
+                    <div class='col-md-8'>
+                        <button class='btn btn-success' ng-click='addIssue(problem)' ng-show='issue.index == -1'>Add</button>
+                        <button class='btn btn-info' ng-click='newIssue()' ng-show='issue.index != -1'>New</button>
+                        <button class='btn btn-danger' ng-click='deleteIssue()' ng-show='issue.index != -1'>Remove</button>
+                    </div>
+                </div>
+            </form>
+                </accordion-group>
+            </accordion>
+            <pre>{{issue | json}}</pre>
+        </div>
+    </div>
+
+</div>

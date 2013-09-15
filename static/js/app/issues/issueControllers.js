@@ -1,13 +1,25 @@
-angular.module("codereview", ['ui.bootstrap'])
-    .controller('IssuesCtrl', ['$scope',
+angular.module("issues",[])
+	.controller('IssuesCtrl', ['$scope',
         function($scope) {
             var defaultSeverity = function() {
                 return $scope.severityOptions[0];
-            }
+            };
 
             $scope.issues = [];
             $scope.severityOptions = ['Good', 'Ugly', 'Bad'];
             $scope.issue = {};
+
+            $scope.filteredIssues = function(problem) {
+            	var user = $scope.selectedPerson.id;
+            	var file = $scope.selectedFile.name;
+            	if(user === undefined || file === undefined || problem.name === undefined) return [];
+            	var filtered = [];
+            	for(var i=0;i<$scope.issues.length;i++) {
+            		var issue = $scope.issues[i];
+            		if(issue.problem == problem.name && issue.file == file) filtered.push(issue);
+            	}
+            	return filtered;
+            };
 
             $scope.selectIssue = function(index) {
                 $scope.issue = $scope.issues[index];
@@ -21,7 +33,9 @@ angular.module("codereview", ['ui.bootstrap'])
                 };
             }
 
-            $scope.addIssue = function() {
+            $scope.addIssue = function(problem) {
+            	$scope.issue.problem = problem.name;
+            	$scope.issue.file = $scope.selectedFile.name;
                 $scope.issues.push($scope.issue);
                 $scope.newIssue();
             }

@@ -1,0 +1,64 @@
+<div class='assignment-settings' ng-controller='AssignmentSettingsCtrl'>
+    <div class='row'>
+        <div class='col-md-12'>
+            <input type='text' class='form-control input-lg' ng-model='assignment.title' placeholder='Title' />
+        </div>
+    </div>
+
+    <div class='row'>
+        <h2>Files</h2>
+        <div class='col-md-12'>
+            <div class='file' ng-repeat='file in assignment.files'>
+                <div class='row form-group'>
+                    <div class='col-md-6'>
+                        <input type='text' class='form-control' ng-model='file.name' placeholder='Name...' />
+                    </div>
+                    <div class='col-md-1 col-md-offset-5'>
+                        <button class='btn btn-danger' ng-click='deleteFile($index)'><i class='icon-trash'></i>
+                        </button>
+                    </div>
+                </div>
+                <div class='row'>
+                    <div class='col-md-11 col-md-offset-1'>
+                        <div class='row form-group' ng-repeat='problem in file.problems'>
+                            <div class='col-md-3'>
+                                <input type='text' class='form-control input-sm' ng-model='problem.name' placeholder='Name...' />
+                            </div>
+                            <div class='col-md-5'>
+                                <input type='text' class='form-control input-sm' ng-model='problem.signature' placeholder='Signature...' />
+                            </div>
+                            <div class='col-md-1'>
+                                <button class='btn btn-danger btn-sm' ng-click='deleteProblem(file, $index)'><i class='icon-trash'></i>
+                                </button>
+                            </div>
+                        </div>
+            <button class='btn btn-success btn-sm' ng-click='addProblem(file)'><i class='icon-plus'></i> Add</button>
+                    </div>
+                </div>
+            </div>
+            <button class='btn btn-success' ng-click='addFile()'><i class='icon-plus'></i> Add</button>
+        </div>
+    </div>
+    <div class='row'>
+        <h2>People</h2>
+        <div class='col-md-12'>
+            <div class='row form-group' ng-repeat='person in assignment.people'>
+                <div class='col-md-3'>
+                    <input type='text' class='form-control' ng-model='person.id' placeholder='ID...' />
+                </div>
+                <div class='col-md-3'>
+                    <input type='text' class='form-control' ng-model='person.name' placeholder='Name...' />
+                </div>
+                <div class='col-md-5'>
+                    <input type='email' class='form-control' ng-model='person.email' placeholder='Email...' />
+                </div>
+                <div class='col-md-1'>
+                    <button class='btn btn-danger' ng-click='deletePerson($index)'><i class='icon-trash'></i>
+                    </button>
+                </div>
+            </div>
+            <button class='btn btn-success' ng-click='addPerson()'><i class='icon-plus'></i> Add</button>
+        </div>
+    </div>
+
+</div>

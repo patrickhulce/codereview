@@ -1,0 +1,14 @@
+<div class='assignment' ng-controller='AssignmentCtrl'>
+    <ul class='nav nav-tabs nav-justified'>
+        <li ng-class="{active : mode == 'code'}">
+            <a ng-click="mode = 'code'">Code</a>
+        </li>
+        <li ng-class="{active : mode == 'email'}">
+            <a ng-click='mode = "email"'>Email</a>
+        </li>
+        <li ng-class="{active : mode == 'settings'}">
+            <a ng-click='mode = "settings"'>Settings</a>
+        </li>
+    </ul>
+    <ng-include src="'partials/assignment-'+mode+'.html'"></ng-include>
+</div>
