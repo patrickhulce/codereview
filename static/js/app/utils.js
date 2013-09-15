@@ -1,5 +1,14 @@
 (function(utils) {
+     var s4 = function() {
+        return Math.floor((1 + Math.random()) * 0x10000)
+            .toString(16)
+            .substring(1);
+    };
 
+    utils.newGuid = function() {
+        return s4() + s4() + '-' + s4() + '-' + s4() + '-' +
+            s4() + '-' + s4() + s4() + s4();
+    };
 
     utils.getYPositionOfText = function(signature, code_block) {
         var original = code_block.html();

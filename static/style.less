@@ -1,6 +1,27 @@
 .assignment-settings {
-	padding-top: 20px;
-	.file {
-		padding: 10px 0px;
-	}
+    padding-top: 20px;
+    .file {
+        padding: 10px 0px;
+    }
+}
+.problem-nav {
+    &.scrolled {
+        position: fixed;
+        top: 10px;
+        background: white;
+        z-index: 10;
+        left: 0px;
+        right: 0px;
+        border-top: 1px solid #e9e9e9;
+        border-bottom: 1px solid #e9e9e9;
+        li:last-child {
+            display: block;
+        }
+    }
+    li:last-child {
+        display: none;
+    }
+}
+.tab-pane {
+    padding-top: 15px;
 }

@@ -1,13 +1,43 @@
 <div class='assignment-settings' ng-controller='AssignmentSettingsCtrl'>
-    <div class='row'>
-        <div class='col-md-12'>
-            <input type='text' class='form-control input-lg' ng-model='assignment.title' placeholder='Title' />
+    <div class='row form-group'>
+        <div class='col-md-12 '>
+                <input type='text' class='form-control input-lg' ng-model='assignment.title' placeholder='Title...' />
         </div>
     </div>
+    <div class='row form-group'>
+        <div class='col-md-12 '>
+            <div class='input-group'>
+                <input type='text' class='form-control' ng-model='ioText' placeholder='Export or import assignments...' />
+                <span class='input-group-btn btn-group'>
+                    <button class='btn  btn-info' ng-click='importText()'>Import</button>
+                    <button class='btn btn-primary' ng-click='exportText()'>Export</button>
+                </span>
+            </div>
+        </div>
+    </div>
+    <tabset>
+        <tab>
+            <tab-heading><i class='icon-group'></i> People</tab-heading>
 
-    <div class='row'>
-        <h2>Files</h2>
-        <div class='col-md-12'>
+            <div class='row form-group' ng-repeat='person in assignment.people'>
+                <div class='col-md-3'>
+                    <input type='text' class='form-control' ng-model='person.id' placeholder='ID...' />
+                </div>
+                <div class='col-md-3'>
+                    <input type='text' class='form-control' ng-model='person.name' placeholder='Name...' />
+                </div>
+                <div class='col-md-5'>
+                    <input type='email' class='form-control' ng-model='person.email' placeholder='Email...' />
+                </div>
+                <div class='col-md-1'>
+                    <button class='btn btn-danger' ng-click='deletePerson($index)'><i class='icon-trash'></i>
+                    </button>
+                </div>
+            </div>
+            <button class='btn btn-success' ng-click='addPerson()'><i class='icon-plus'></i> Add</button>
+        </tab>
+        <tab>
+            <tab-heading><i class='icon-file'></i> Files</tab-heading>
             <div class='file' ng-repeat='file in assignment.files'>
                 <div class='row form-group'>
                     <div class='col-md-6'>
@@ -32,33 +62,33 @@
                                 </button>
                             </div>
                         </div>
-            <button class='btn btn-success btn-sm' ng-click='addProblem(file)'><i class='icon-plus'></i> Add</button>
+                        <button class='btn btn-success btn-sm' ng-click='addProblem(file)'><i class='icon-plus'></i> Add</button>
                     </div>
                 </div>
             </div>
             <button class='btn btn-success' ng-click='addFile()'><i class='icon-plus'></i> Add</button>
-        </div>
-    </div>
-    <div class='row'>
-        <h2>People</h2>
-        <div class='col-md-12'>
-            <div class='row form-group' ng-repeat='person in assignment.people'>
+        </tab>
+        <tab>
+            <tab-heading><i class='icon-comments'></i> Issue Templates</tab-heading>
+            <div class='row form-group' ng-repeat='issue in assignment.issueTemplates'>
                 <div class='col-md-3'>
-                    <input type='text' class='form-control' ng-model='person.id' placeholder='ID...' />
-                </div>
-                <div class='col-md-3'>
-                    <input type='text' class='form-control' ng-model='person.name' placeholder='Name...' />
+                    <input type='text' class='form-control' ng-model='issue.name' placeholder='Name...' />
                 </div>
                 <div class='col-md-5'>
-                    <input type='email' class='form-control' ng-model='person.email' placeholder='Email...' />
+                    <input type='text' class='form-control' ng-model='issue.description' placeholder='Explanation...' />
+                </div>
+                <div class='col-md-3'>
+                    <div class="btn-group">
+                        <button ng-repeat='opt in severityOptions' type="button" class="btn btn-primary btn-sm" ng-model="issue.severity" btn-radio="opt">{{opt}}</button>
+                    </div>
                 </div>
                 <div class='col-md-1'>
-                    <button class='btn btn-danger' ng-click='deletePerson($index)'><i class='icon-trash'></i>
+                    <button class='btn btn-danger' ng-click='deleteIssueTemplate($index)'><i class='icon-trash'></i>
                     </button>
                 </div>
             </div>
-            <button class='btn btn-success' ng-click='addPerson()'><i class='icon-plus'></i> Add</button>
-        </div>
-    </div>
+            <button class='btn btn-success' ng-click='addIssueTemplate()'><i class='icon-plus'></i> Add</button>
+        </tab>
+    </tabset>
 
 </div>
