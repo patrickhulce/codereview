@@ -9,7 +9,6 @@ angular.module('files.provider', [])
                         url += project + "/" + user + "/";
                         url += fileParts[0] + "/" + fileParts[1];
                         console.log("Fetching file from " + url);
-                        url = app.settings.dataUrl + "files/test/joe/treasure/ml";
                         return $http.get(url);
                     }
                 };

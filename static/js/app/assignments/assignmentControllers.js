@@ -1,85 +1,36 @@
 angular.module("assignments", [])
-    .controller("AssignmentCtrl", ['$scope',
-        function($scope) {
+    .controller("AssignmentCtrl", ['$scope', '$http',
+        function($scope, $http) {
             $scope.mode = 'code';
             $scope.selectedPerson = {};
-            $scope.assignment = {
-                title: 'HW01',
-                files: [{
-                	'id': 1,
-                    'name': 'intro.ml',
-                    'problems': [{
-                    	'id':1,
-                        'name': 'int_of_gem',
-                        'signature': 'let int_of_gem'
-                    },{
-                    	'id':2,
-                        'name': 'int_of_treasure',
-                        'signature': 'let rec int_of_treasure'
-                    },{
-                    	'id':3,
-                        'name': 'int_of_treasur23e',
-                        'signature': 'let rec int_of_treasure'
-                    },{
-                    	'id':4,
-                        'name': 'sd',
-                        'signature': 'let rec int_of_treasure'
-                    },{
-                    	'id':5,
-                        'name': 'gdsg',
-                        'signature': 'let rec int_of_treasure'
-                    },{
-                    	'id':6,
-                        'name': 'werw',
-                        'signature': 'let rec int_of_treasure'
-                    },{
-                    	'id':7,
-                        'name': '2352',
-                        'signature': 'let rec int_of_treasure'
-                    },{
-                    	'id':8,
-                        'name': 'sdfsdf',
-                        'signature': 'let rec int_of_treasure'
-                    },{
-                    	'id':9,
-                        'name': '23523dsfds',
-                        'signature': 'let rec int_of_treasure'
-                    },{
-                    	'id':10,
-                        'name': 'asa',
-                        'signature': 'let rec int_of_treasure'
-                    },{
-                    	'id':11,
-                        'name': 'asdher',
-                        'signature': 'let rec int_of_treasure'
-                    }]
-                }, {
-                	'id': 20,
-                    'name': 'treasure.ml',
-                    'problems': [{
-                	'id': 24,
-                        'name': 'int_of_gem_treasure',
-                        'signature': 'let int_of_gem'
-                    }]
-                }],
-                people: [{
-                    'id': 'phulce',
-                    'name': 'Patrick',
-                    'email': "phulce@wharton.edu"
-                }, {
-                    'id': 'joe',
-                    'name': "John",
-                    "email": "jdoe@seas.edu"
-                }],
-                issueTemplates : [{
-                	'name' : 'Ugly indentation',
-                	'description': 'Check your spaces for tabs settings',
-                	'severity' : 'Awful'
-                }]
-            };
+            $scope.assignment = {};
             $scope.selectPerson = function(index) {
                 $scope.selectedPerson = $scope.assignment.people[index];
             };
+            $http.get("assignment_default.json")
+                .success(function(data) {
+                    $scope.assignment = data;
+                });
+            $scope.loadAssignment = function() {
+                $http.get("/projects/" + $scope.assignment.title)
+                    .success(function(data) {
+                        $scope.setAssignment(data);
+                    });
+            };
+            $scope.saveAssignment = function() {
+                $http.post("/projects/" + $scope.assignment.title, $scope.assignment)
+                    .success(function(data) {
+                        if(data.status == 'success') alert("Saved successfully");
+                    });
+            }
+
+            $scope.setAssignment = function(json) {
+                $scope.assignment = json;
+            }
+
+            var interval = setInterval(function() {
+                $scope.saveAssignment();
+            }, 60000);
         }
     ])
     .controller("AssignmentCodeCtrl", ['$scope',
@@ -90,7 +41,7 @@ angular.module("assignments", [])
             };
             $scope.scrollToTop = function() {
                 $('html,body').animate({
-                	'scrollTop': 0
+                    'scrollTop': 0
                 }, 500);
             };
 
@@ -114,23 +65,23 @@ angular.module("assignments", [])
                 if (person.assessments[file] === undefined) person.assessments[file] = {};
                 if (person.assessments[file][problem] === undefined) person.assessments[file][problem] = {};
                 $scope.selectedAssessment = person.assessments[file][problem];
-                if($scope.selectedAssessment.issues === undefined) $scope.selectedAssessment.issues = [];
+                if ($scope.selectedAssessment.issues === undefined) $scope.selectedAssessment.issues = [];
                 $scope.isSelected = true;
             });
         }
     ])
-    .controller("AssignmentSettingsCtrl", ['$scope','$filter',
-        function($scope,$filter) {
-        	$scope.severityOptions = app.settings.severityOptions;
+    .controller("AssignmentSettingsCtrl", ['$scope', '$filter',
+        function($scope, $filter) {
+            $scope.severityOptions = app.settings.severityOptions;
 
-        	$scope.exportText = function() {
-        		$scope.ioText = $filter("json")($scope.assignment);
-        	};
+            $scope.exportText = function() {
+                $scope.ioText = $filter("json")($scope.assignment);
+                $scope.setAssignment(json);
+            };
 
-        	$scope.importText = function() {
-        		var json = $.parseJSON($scope.ioText);
-        		$scope.assignment = json;
-        	};
+            $scope.importText = function() {
+                var json = $.parseJSON($scope.ioText);
+            };
 
             $scope.addPerson = function() {
                 $scope.assignment.people.push({});
@@ -156,10 +107,93 @@ angular.module("assignments", [])
                 file.problems.splice(index, 1);
             };
             $scope.addIssueTemplate = function() {
-            	$scope.assignment.issueTemplates.push({});
+                $scope.assignment.issueTemplates.push({});
             };
             $scope.deleteIssueTemplate = function(index) {
-            	$scope.assignment.issueTemplates.splice(index,1);
+                $scope.assignment.issueTemplates.splice(index, 1);
             };
+        }
+    ])
+    .controller("AssignmentEmailCtrl", ['$scope', '$compile',
+        function($scope, $compile) {
+            $scope.email = {
+                'grade': "",
+                'comments': "",
+                'data': {}
+            };
+
+            $scope.renderEmail = function() {
+                var tmps = $scope.assignment.emailTemplate;
+                var body = tmps.preamble.replace("%NAME%", $scope.selectedPerson.name);
+                body += "\nGrade : " + $scope.email.grade;
+                body += "\n" + $scope.email.comments;
+                body += "\n" + $('.issues-template').text();
+                body += tmps.postscript;
+                return body;
+            };
+
+            $scope.allData = function() {
+                var ret = {
+                    'qualityData': [],
+                    'testData': [],
+                    'severityData': [],
+                    'problems': [],
+                    'issues': []
+                };
+                for (var fileId in $scope.selectedPerson.assessments) {
+                    var file = utils.find($scope.assignment.files, function(file) {
+                        return file.id == fileId;
+                    });
+                    var problems = $scope.selectedPerson.assessments[fileId];
+                    for (var problemId in problems) {
+                        var problem = utils.find(file.problems, function(prob) {
+                            return problemId == prob.id;
+                        });
+                        var problemOut = problems[problemId];
+                        problemOut.name = problem.name;
+                        problemOut.filename = file.name;
+                        ret.problems.push(problemOut);
+                        ret.issues.push.apply(ret.issues, problemOut.issues);
+                    }
+                }
+                var qualityGroups = utils.groupBy(ret.problems, function(prob) {
+                    return prob.quality;
+                });
+                var testGroups = utils.groupBy(ret.problems, function(prob) {
+                    return prob.testing;
+                });
+                var severityGroups = utils.groupBy(ret.issues, function(issue) {
+                    return issue.severity;
+                });
+                var countFunc = function(kvp) {
+                    return {
+                        'name': kvp.key,
+                        'count': kvp.value.length
+                    };
+                };
+                ret.qualityData = utils.map(utils.dictionaryToArray(qualityGroups), countFunc);
+                ret.testData = utils.map(utils.dictionaryToArray(testGroups), countFunc);
+                ret.severityData = utils.map(utils.dictionaryToArray(severityGroups), countFunc);
+                return ret;
+            };
+
+            $scope.percentForGroup = function(row, list) {
+                //var max = Math.max.apply(null,utils.map(list,function(r) { return r.count }));
+                var max = utils.reduce(list, 0, function(x, y) {
+                    return x.count + y
+                });
+                return row.count * 100 / max;
+            };
+
+            $scope.$watch("selectedPerson.id", function() {
+                if ($scope.selectedPerson.emailData === undefined) {
+                    $scope.selectedPerson.emailData = {
+                        'grade': "",
+                        'comments': ""
+                    };
+                }
+                $scope.email = $scope.selectedPerson.emailData;
+                $scope.email.data = $scope.allData();
+            });
         }
     ]);

@@ -1,0 +1,4 @@
+<div ng-repeat='problem in email.data.problems'>{{problem.filename}}, {{problem.name}}: Quality ({{problem.quality}}), Testing ({{problem.testing}})
+    <span ng-repeat='issue in problem.issues'>{{issue.name}} ({{issue.severity}}): {{issue.description}}
+    </span>
+</div>

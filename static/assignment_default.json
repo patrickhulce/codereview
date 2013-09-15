@@ -1,0 +1,51 @@
+{
+   "title":"HW01",
+   "files":[
+      {
+         "id":1,
+         "name":"intro.ml",
+         "problems":[
+            {
+               "id":1,
+               "name":"int_of_gem",
+               "signature":"let int_of_gem"
+            },
+            {
+               "id":2,
+               "name":"int_of_treasure",
+               "signature":"let rec int_of_treasure"
+            }
+         ]
+      }
+   ],
+   "people":[
+      {
+         "id":"phulce",
+         "name":"Patrick",
+         "email":"phulce@wharton.upenn.edu",
+         "assessments":{
+         }
+      },
+      {
+         "id":"joe",
+         "name":"John",
+         "email":"jdoe@seas.edu"
+      }
+   ],
+   "issueTemplates":[
+      {
+         "name":"Indentation",
+         "description":"Check your spaces for tabs settings",
+         "severity":"Minor"
+      },
+      {
+         "name":"Booleans",
+         "description":"Don't return a boolean in an if/else statement. Use short-circuiting (|| and &&) instead.",
+         "severity":"Awful"
+      }
+   ],
+   "emailTemplate":{
+      "preamble":"Hi %NAME%,\nHere are your style comments!",
+      "postscript":"Best,\nYour TA"
+   }
+}
