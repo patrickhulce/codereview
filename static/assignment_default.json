@@ -1,5 +1,5 @@
 {
-   "title":"HW01",
+   "title":"hw02",
    "files":[
       {
          "id":1,
@@ -25,11 +25,6 @@
          "email":"phulce@wharton.upenn.edu",
          "assessments":{
          }
-      },
-      {
-         "id":"joe",
-         "name":"John",
-         "email":"jdoe@seas.edu"
       }
    ],
    "issueTemplates":[

@@ -4,32 +4,42 @@ angular.module("assignments", [])
             $scope.mode = 'code';
             $scope.selectedPerson = {};
             $scope.assignment = {};
+            $scope.titleChanged = false;
+
             $scope.selectPerson = function(index) {
                 $scope.selectedPerson = $scope.assignment.people[index];
             };
+
             $http.get("assignment_default.json")
                 .success(function(data) {
                     $scope.assignment = data;
+                    $scope.loadAssignment();
                 });
+
             $scope.loadAssignment = function() {
                 $http.get("/projects/" + $scope.assignment.title)
                     .success(function(data) {
+                        $scope.titleChanged = false;
                         $scope.setAssignment(data);
                     });
             };
             $scope.saveAssignment = function() {
                 $http.post("/projects/" + $scope.assignment.title, $scope.assignment)
                     .success(function(data) {
-                        if(data.status == 'success') alert("Saved successfully");
+                        $scope.titleChanged = false;
+                        console.log(data);
                     });
             }
+            $scope.setAssignment = function(assignment) {
+                $scope.assignment = assignment;
+            };
 
-            $scope.setAssignment = function(json) {
-                $scope.assignment = json;
-            }
+            $scope.$watch('assignment.title', function(newVal, oldVal) {
+                $scope.titleChanged = newVal != oldVal;
+            });
 
             var interval = setInterval(function() {
-                $scope.saveAssignment();
+                if (!$scope.titleChanged) $scope.saveAssignment();
             }, 60000);
         }
     ])
@@ -76,11 +86,11 @@ angular.module("assignments", [])
 
             $scope.exportText = function() {
                 $scope.ioText = $filter("json")($scope.assignment);
-                $scope.setAssignment(json);
             };
 
             $scope.importText = function() {
                 var json = $.parseJSON($scope.ioText);
+                $scope.setAssignment(json);
             };
 
             $scope.addPerson = function() {
@@ -124,12 +134,19 @@ angular.module("assignments", [])
 
             $scope.renderEmail = function() {
                 var tmps = $scope.assignment.emailTemplate;
+                var issueText = $('.issues-template').text();
+                issueText = issueText.replace(/\n+/g, "\n");
                 var body = tmps.preamble.replace("%NAME%", $scope.selectedPerson.name);
                 body += "\nGrade : " + $scope.email.grade;
                 body += "\n" + $scope.email.comments;
-                body += "\n" + $('.issues-template').text();
+                body += "\n" + issueText;
                 body += tmps.postscript;
                 return body;
+            };
+
+            $scope.suggestedScore = function() {
+                var data = $scope.allData();
+                return app.settings.scoreFunction(data.qualityData, data.testData, data.severityData);
             };
 
             $scope.allData = function() {
@@ -178,11 +195,21 @@ angular.module("assignments", [])
             };
 
             $scope.percentForGroup = function(row, list) {
-                //var max = Math.max.apply(null,utils.map(list,function(r) { return r.count }));
                 var max = utils.reduce(list, 0, function(x, y) {
-                    return x.count + y
+                    return x.count + y;
                 });
                 return row.count * 100 / max;
+            };
+
+            $scope.displayNameFor = function(type, name) {
+                switch (type) {
+                    case 'quality':
+                        return app.settings.qualityDisplayNames[name];
+                    case 'testing':
+                        return app.settings.testingDisplayNames[name];
+                    case 'severity':
+                        return app.settings.severityDisplayNames[name];
+                }
             };
 
             $scope.$watch("selectedPerson.id", function() {

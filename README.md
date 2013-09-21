@@ -19,8 +19,7 @@ Installing Code Review
     # Download and setup the directories
     git clone https://github.com/patrickhulce/codereview.git
     cd codereview
-    mkdir data
-    mkdir data/_projects
+    mkdir -p data/_projects
     
     # Run Code Review
     python app.py
@@ -43,7 +42,7 @@ The basic workflow of Code Review involves the following steps.
 3.  (Optional) Enter the issues you expect to see under Settings > Issue Templates
 4.  Copy your students' code into the data folder you created during the installation step in a subfolder bearing the assignment's name. For example, if you're grading an assignment called `lab01` put each student's code into a `codereview/data/lab01/studentid` folder.
 5.  Enter the name of the assignment (make sure this matches the folder name you used in step 4) under Settings.
-6.  Make your comments (see Making Comments for details).
+6.  Make your comments (see [Making Comments](#making-comments) for details).
 7.  Edit your email template under Settings > Email Templates
 8.  Make your grades for each student under Email.
 

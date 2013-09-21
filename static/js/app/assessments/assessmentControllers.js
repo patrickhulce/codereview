@@ -1,8 +1,8 @@
 angular.module("assessments", [])
     .controller('AssessmentCtrl', ['$scope',
         function($scope) {
-            $scope.qualityOptions = ['Bad', 'Ugly', 'Good'];
-            $scope.testingOptions = ['Lacking', 'Decent', 'Solid'];
+            $scope.qualityOptions = app.settings.qualityOptions;
+            $scope.testingOptions = app.settings.testingOptions;
 
             var initialSliderY = $('.assessment-slider').offset().top;
             var initialNavY = $('.problem-nav').offset().top;

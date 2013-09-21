@@ -1,3 +1,4 @@
+import os
 from flask import Flask, redirect, url_for, jsonify, request
 app = Flask(__name__)
 
@@ -10,9 +11,9 @@ def index():
 
 @app.route("/files/<project>/<user>/<name>/<ext>")
 def get_page(project, user, name, ext):
-	sanitized = "[^a-z]+"
-	project = project.replace(sanitized,"")
-	user = user.replace(sanitized,"")
+	sanitized = "[^A-Za-z0-9]+"
+	project = project.lower().replace(sanitized,"")
+	user = user.lower().replace(sanitized,"")
 	name = name.replace(sanitized,"")
 	ext = ext.replace(sanitized,"")
 	filepath = "data/%s/%s/%s.%s" % (project, user, name, ext)
@@ -24,6 +25,8 @@ def get_page(project, user, name, ext):
 
 @app.route("/projects/<project>",methods=['GET','POST'])
 def get_project(project):
+	if not os.path.exists("data/_projects"):
+		os.makedirs("data/_projects")
 	path = get_project_path(project)
 	if request.method == 'POST':
 		try:
@@ -31,7 +34,7 @@ def get_project(project):
 				f.write(request.data)
 				return jsonify(status="success")
 		except Exception as ex:
-			return jsonify(status='error',details=repr(ex))
+			return jsonify(status='error',details=str(ex))
 	try:
 		with open(path,"r") as f:
 			return f.read()

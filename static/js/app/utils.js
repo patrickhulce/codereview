@@ -15,6 +15,7 @@
         //Replace the signature with a span
         var sanitizedSig = signature.replace("(", "\\(");
         sanitizedSig = sanitizedSig.replace(")", "\\)");
+        sanitizedSig = sanitizedSig.replace("rec", "(rec)?");
         sanitizedSig = sanitizedSig.replace(/ +/g,"( ){0,4}");
         console.log("Matching against pattern : " + sanitizedSig);
         var pattern = new RegExp(sanitizedSig, "i");
