@@ -20,11 +20,12 @@ Installing Code Review
     git clone https://github.com/patrickhulce/codereview.git
     cd codereview
     mkdir data
+    mkdir data/_projects
     
     # Run Code Review
     python app.py
 
-Open your browser to port 8000 and enjoy!
+Open your browser to localhost:8000 and enjoy!
 
 Usage
 -----
@@ -53,6 +54,10 @@ Because the assignment contains not only the settings, but the comments themselv
 ### Importing/Exporting
 
 In the settings tab, there is a textbox with import and export buttons. Pressing `Export` will populate the textbox with the JSON string of the current value of the assignment, allowing for easy sharing of issue templates, people, and files. Pressing `Import` will parse the text in the textbox and set the value of the people, files, templates, and comments accordingly. __This is currently the safest way to load assignments from a previous session__.
+
+### Making Comments
+
+After you've entered the necessary settings and copied the files into the `data/assignment_name` folder, you're ready to start commenting on the code. Start by opening the `Code` tab, selecting a student's name, and selecting a file. The student's file should appear in the code pane on the left. Now click on a problem to get started. A tabbed interface should appear on the right. The `General` section is where you'll mark the student's overall style in solving the given problem as well as his or her test coverage by using the radio buttons. The `Issues` section is where you'll provide comments on specific errors or style violations that could be improved. To assist in making comments, common issues can be automatically filled in by starting to type the name of the issue template and hitting enter once the name is highlighted. This will automatically populate the description and severity based on the corresponding issue template. After making the necessary comment, be sure to click `Add` to add the comment to the assignment.
 
 Settings
 --------
