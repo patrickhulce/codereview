@@ -24,7 +24,7 @@ Installing Code Review
     # Run Code Review
     python app.py
 
-Open your browser to port 8080 and enjoy!
+Open your browser to port 8000 and enjoy!
 
 Usage
 -----
