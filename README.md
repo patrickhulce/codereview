@@ -48,11 +48,11 @@ The basic workflow of Code Review involves the following steps.
 
 ### Loading/Saving
 
-Because the assignment contains not only the settings, but the comments themselves. __Code Review automatically saves your assignment to `data/_projects/assignment_name.json` every minute__. Please note that if you start a new assignment and change the name to an assignment you already have saved without clicking `Load` _your old assignment will be overwritten_. For safe importing of a project see [Importing/Exporting](#importingsaving).
+Because the assignment contains not only the settings, but the comments themselves. __Code Review automatically saves your assignment to `data/_projects/assignment_name.json` every minute__. You can manually save or load a project. For other ways to import a project see [Importing/Exporting](#importingsaving).
 
 ### Importing/Exporting
 
-In the settings tab, there is a textbox with import and export buttons. Pressing `Export` will populate the textbox with the JSON string of the current value of the assignment, allowing for easy sharing of issue templates, people, and files. Pressing `Import` will parse the text in the textbox and set the value of the people, files, templates, and comments accordingly. __This is currently the safest way to load assignments from a previous session__.
+In the settings tab, there is a textbox with import and export buttons. Pressing `Export` will populate the textbox with the JSON string of the current value of the assignment, allowing for easy sharing of issue templates, people, and files. Pressing `Import` will parse the text in the textbox and set the value of the people, files, templates, and comments accordingly. This is currently the safest way to load assignments from a previous session.
 
 ### Making Comments
 
