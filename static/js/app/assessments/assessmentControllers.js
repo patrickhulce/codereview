@@ -56,6 +56,15 @@ angular.module("assessments", [])
                 $scope.newIssue();
             };
 
+            $scope.addToTemplates = function() {
+                $scope.fixAssignment();
+                $scope.assignment.issueTemplates.push({
+                    "name" : $scope.issue.name,
+                    "description" : $scope.issue.description,
+                    "severity" : $scope.issue.severity
+                });
+            }
+
             $scope.newIssue();
 
             $scope.$watch("issue.name",function(newValue,oldValue) {

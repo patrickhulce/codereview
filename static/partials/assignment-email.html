@@ -9,11 +9,7 @@
             </ul>
         </div>
         <div class='col-md-2'>
-            <form method='post' enctype='text/plain' action='mailto:{{selectedPerson.email}}'>
-                <input type='hidden' name='subject' value='[CIS120] {{assignment.title}} Style Comments' />
-                <input type='hidden' name='body' value='{{renderEmail()}}' />
-                <input type='submit' class='btn btn-success' ng-click='addIssue()' value='Send' />
-            </form>
+                <button type='submit' class='btn btn-success' ng-click='sendEmail()'>Send</button>
         </div>
     </div>
 
@@ -74,5 +70,5 @@
             </div>
         </div>
     </div>
-    <pre>{{ renderEmail() }}</pre>
+    <pre id='email-preview'>{{ renderEmail() }}</pre>
 </div>

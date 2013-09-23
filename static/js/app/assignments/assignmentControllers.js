@@ -14,6 +14,7 @@ angular.module("assignments", [])
                 .success(function(data) {
                     $scope.assignment = data;
                     $scope.loadAssignment();
+                    $scope.fixAssignment();
                 });
 
             $scope.loadAssignment = function() {
@@ -24,15 +25,32 @@ angular.module("assignments", [])
                     });
             };
             $scope.saveAssignment = function() {
+                $scope.fixAssignment();
                 $http.post("/projects/" + $scope.assignment.title, $scope.assignment)
                     .success(function(data) {
                         $scope.titleChanged = false;
                         console.log(data);
+                        if (data.status == "success") $.bootstrapGrowl("Assignment Saved!");
+                        else $.bootstrapGrowl("Error saving assignment", {
+                            type: 'danger'
+                        });
+                    })
+                    .error(function() {
+                        $.bootstrapGrowl("Error saving assignment", {
+                            type: 'danger'
+                        });
                     });
             }
             $scope.setAssignment = function(assignment) {
                 $scope.assignment = assignment;
             };
+
+            $scope.fixAssignment = function() {
+                var a = $scope.assignment;
+                if (a.people === undefined) a.people = [];
+                if (a.files === undefined) a.files = [];
+                if (a.issueTemplates === undefined) a.issueTemplates = [];
+            }
 
             $scope.$watch('assignment.title', function(newVal, oldVal) {
                 $scope.titleChanged = newVal != oldVal;
@@ -41,6 +59,11 @@ angular.module("assignments", [])
             var interval = setInterval(function() {
                 if (!$scope.titleChanged) $scope.saveAssignment();
             }, 60000);
+
+            Mousetrap.bind(['command+s', 'ctrl+s'], function() {
+                $scope.saveAssignment();
+                return false;
+            })
         }
     ])
     .controller("AssignmentCodeCtrl", ['$scope',
@@ -91,21 +114,26 @@ angular.module("assignments", [])
             $scope.importText = function() {
                 var json = $.parseJSON($scope.ioText);
                 $scope.setAssignment(json);
+                $scope.fixAssignment();
             };
 
             $scope.addPerson = function() {
+                $scope.fixAssignment();
                 $scope.assignment.people.push({});
             };
             $scope.deletePerson = function(index) {
+                $scope.fixAssignment();
                 $scope.assignment.people.splice(index, 1);
             }
             $scope.addFile = function() {
+                $scope.fixAssignment();
                 $scope.assignment.files.push({
                     'id': utils.newGuid(),
                     'problems': []
                 });
             };
             $scope.deleteFile = function(index) {
+                $scope.fixAssignment();
                 $scope.assignment.files.splice(index, 1);
             };
             $scope.addProblem = function(file) {
@@ -117,19 +145,46 @@ angular.module("assignments", [])
                 file.problems.splice(index, 1);
             };
             $scope.addIssueTemplate = function() {
+                $scope.fixAssignment();
                 $scope.assignment.issueTemplates.push({});
             };
             $scope.deleteIssueTemplate = function(index) {
+                $scope.fixAssignment();
                 $scope.assignment.issueTemplates.splice(index, 1);
             };
         }
     ])
-    .controller("AssignmentEmailCtrl", ['$scope', '$compile',
-        function($scope, $compile) {
+    .controller("AssignmentEmailCtrl", ['$scope', '$compile', '$http',
+        function($scope, $compile, $http) {
             $scope.email = {
                 'grade': "",
                 'comments': "",
                 'data': {}
+            };
+
+            $scope.sendEmail = function() {
+                var person = $scope.selectedPerson;
+                var data = {
+                    "to_addr": person.email,
+                    "body": $('#email-preview').text(),
+                    "subject": "[CIS120] Style Comments " + $scope.assignment.title
+                };
+                $http.post("/email", data)
+                    .success(function(data) {
+                        console.log(data);
+                        if (data.status == "success")
+                            $.bootstrapGrowl("Email sent to " + person.email);
+                        else
+                            $.bootstrapGrowl("Error sending email", {
+                                type: 'danger'
+                            });
+                    })
+                    .error(function(data) {
+                        console.log(data);
+                        $.bootstrapGrowl("Error sending email", {
+                            type: 'danger'
+                        });
+                    });
             };
 
             $scope.renderEmail = function() {

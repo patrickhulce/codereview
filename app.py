@@ -1,9 +1,22 @@
 import os
-from flask import Flask, redirect, url_for, jsonify, request
+import smtplib
+
+from email.mime.text import MIMEText
+from flask import Flask, redirect, url_for, jsonify, request, json
+
 app = Flask(__name__)
 
 def get_project_path(project):
 	return "data/_projects/%s.json" % project.lower().replace("[^a-z0-9]","")
+
+def get_email_config():
+	config = {}
+	with open("email.pref","r") as f:
+		config["server"] = f.readline().strip()
+		config["from_addr"] = f.readline().strip()
+		config["user"] = f.readline().strip()
+		config["password"] = f.readline().strip()
+	return config
 
 @app.route("/")
 def index():
@@ -40,6 +53,35 @@ def get_project(project):
 			return f.read()
 	except:
 		return jsonify(title='New Project')
+
+@app.route("/email",methods=['POST'])
+def send_email():
+	try:
+		email_config = get_email_config()
+		if request.method == 'POST' and email_config is not None:
+			data = json.loads(request.data)
+
+			me = email_config['from_addr']
+			you = data['to_addr']
+
+			msg = MIMEText(data['body'])
+			msg['From'] = me
+			msg['To'] = you
+			msg['Subject'] = data['subject']
+
+			try:
+				s = smtplib.SMTP(email_config['server'])
+				s.starttls()
+				s.login(email_config['user'], email_config['password'])
+				s.sendmail(me, [you, me], msg.as_string())
+				s.quit()
+				return jsonify(status='success')
+			except Exception as ex:
+				return jsonify(status='error',details=str(ex))
+		return jsonify(status='error',details="No email config present")
+	except Exception as ex:
+		return jsonify(status='error',details=str(ex))
+
 
 if __name__ == "__main__":
 	app.run(port=8000)
