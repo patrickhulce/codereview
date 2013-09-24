@@ -12,7 +12,9 @@ angular.module('files', ['files.provider'])
                 if (title === undefined || user === undefined || file === undefined) return;
                 console.log("Fetching file");
                 fileService.getFile(title, user, file).then(function(value) {
-                    $("#code-view").html(value.data);
+                	$code_view = $("#code-view");
+                    $code_view.html(value.data);
+                    $code_view.each(function(i, e) {hljs.highlightBlock(e)});
                 });
             });
         }
