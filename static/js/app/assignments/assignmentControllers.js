@@ -157,7 +157,8 @@ angular.module("assignments", [])
     .controller("AssignmentEmailCtrl", ['$scope', '$compile', '$http',
         function($scope, $compile, $http) {
             $scope.email = {
-                'grade': "",
+                'styleGrade': "",
+                'testingGrade': "",
                 'comments': "",
                 'data': {}
             };
@@ -192,7 +193,7 @@ angular.module("assignments", [])
                 var issueText = $('.issues-template').text();
                 issueText = issueText.replace(/\n+/g, "\n");
                 var body = tmps.preamble.replace("%NAME%", $scope.selectedPerson.name);
-                body += "\nGrade : " + $scope.email.grade;
+                body += "\nGrade:\nStyle: " + $scope.email.styleGrade + "/10, Tests: " + $scope.email.testingGrade + "/5";
                 body += "\n" + $scope.email.comments;
                 body += "\n" + issueText;
                 body += tmps.postscript;
@@ -270,7 +271,8 @@ angular.module("assignments", [])
             $scope.$watch("selectedPerson.id", function() {
                 if ($scope.selectedPerson.emailData === undefined) {
                     $scope.selectedPerson.emailData = {
-                        'grade': "",
+                        'styleGrade': "",
+                        'testingGrade': "",
                         'comments': ""
                     };
                 }
