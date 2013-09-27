@@ -19,7 +19,7 @@
         sanitizedSig = sanitizedSig.replace(/ +/g,"( ){0,4}");
         console.log("Matching against pattern : " + sanitizedSig);
         var pattern = new RegExp(sanitizedSig, "i");
-        var replaced = original.replace(pattern, "<span id='signature'>tmp</span>");
+        var replaced = code_block.text().replace(pattern, "<span id='signature'>tmp</span>");
         code_block.html(replaced);
         var offset = code_block.find("#signature").offset();
         code_block.html(original);
